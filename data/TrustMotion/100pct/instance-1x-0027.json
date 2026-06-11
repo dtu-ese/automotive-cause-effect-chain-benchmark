@@ -1,0 +1,2202 @@
+{
+  "metadata": {
+    "time_unit": "us",
+    "description": "Synthetic cause-effect task-set instance #27 at scale 1 (pure-sampling, fingerprint-noise=0.1)."
+  },
+  "platform": {
+    "cpus": [
+      {
+        "id": 0,
+        "cores": [
+          {
+            "id": 0
+          },
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "cores": [
+          {
+            "id": 0
+          },
+          {
+            "id": 1
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "cores": [
+          {
+            "id": 0
+          },
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          },
+          {
+            "id": 3
+          }
+        ]
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "name": "t_0000",
+      "period": 10000,
+      "deadline": 5118,
+      "wcet": 230,
+      "bcet": 0,
+      "earliest_activation": 2995,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0001",
+      "period": 80000,
+      "deadline": 61493,
+      "wcet": 1400,
+      "bcet": 0,
+      "earliest_activation": 11692,
+      "max_jitter": 8000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0002",
+      "period": 33333,
+      "deadline": 33333,
+      "wcet": 8435,
+      "bcet": 0,
+      "earliest_activation": 24064,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0003",
+      "period": 40000,
+      "deadline": 36365,
+      "wcet": 4838,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": 4000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0004",
+      "period": 40000,
+      "deadline": 36579,
+      "wcet": 595,
+      "bcet": 0,
+      "earliest_activation": 30893,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0005",
+      "period": 20000,
+      "deadline": 4084,
+      "wcet": 1009,
+      "bcet": 0,
+      "earliest_activation": 9043,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0006",
+      "period": 10000,
+      "deadline": 9313,
+      "wcet": 1064,
+      "bcet": 0,
+      "earliest_activation": 8401,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0007",
+      "period": 80000,
+      "deadline": 12482,
+      "wcet": 4757,
+      "bcet": 0,
+      "earliest_activation": 795,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0008",
+      "period": 5000,
+      "deadline": 2998,
+      "wcet": 283,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0009",
+      "period": 40000,
+      "deadline": 5588,
+      "wcet": 2886,
+      "bcet": 0,
+      "earliest_activation": 23994,
+      "max_jitter": 4000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0010",
+      "period": 40000,
+      "deadline": 34037,
+      "wcet": 1754,
+      "bcet": 0,
+      "earliest_activation": 7268,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0011",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 873,
+      "bcet": 0,
+      "earliest_activation": 4845,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0012",
+      "period": 40000,
+      "deadline": 40000,
+      "wcet": 1418,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0013",
+      "period": 33333,
+      "deadline": 33333,
+      "wcet": 22500,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0014",
+      "period": 5000,
+      "deadline": 5000,
+      "wcet": 348,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0015",
+      "period": 5000,
+      "deadline": 2299,
+      "wcet": 453,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0016",
+      "period": 10000,
+      "deadline": 9839,
+      "wcet": 330,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0017",
+      "period": 10000,
+      "deadline": 9795,
+      "wcet": 3250,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0018",
+      "period": 80000,
+      "deadline": 72771,
+      "wcet": 4765,
+      "bcet": 0,
+      "earliest_activation": 12403,
+      "max_jitter": 8000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0019",
+      "period": 80000,
+      "deadline": 68315,
+      "wcet": 4917,
+      "bcet": 0,
+      "earliest_activation": 3925,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0020",
+      "period": 10000,
+      "deadline": 7200,
+      "wcet": 226,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": 5000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0021",
+      "period": 80000,
+      "deadline": 63875,
+      "wcet": 1528,
+      "bcet": 0,
+      "earliest_activation": 53261,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0022",
+      "period": 80000,
+      "deadline": 76181,
+      "wcet": 4521,
+      "bcet": 0,
+      "earliest_activation": 983,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0023",
+      "period": 20000,
+      "deadline": 1791,
+      "wcet": 357,
+      "bcet": 0,
+      "earliest_activation": 3992,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0024",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 314,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0025",
+      "period": 20000,
+      "deadline": 7034,
+      "wcet": 3000,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0026",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 661,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0027",
+      "period": 10000,
+      "deadline": 5196,
+      "wcet": 817,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0028",
+      "period": 20000,
+      "deadline": 17703,
+      "wcet": 2276,
+      "bcet": 0,
+      "earliest_activation": 4601,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0029",
+      "period": 40000,
+      "deadline": 36294,
+      "wcet": 946,
+      "bcet": 0,
+      "earliest_activation": 6039,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0030",
+      "period": 20000,
+      "deadline": 16982,
+      "wcet": 162,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0031",
+      "period": 10000,
+      "deadline": 7147,
+      "wcet": 699,
+      "bcet": 0,
+      "earliest_activation": 9694,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0032",
+      "period": 10000,
+      "deadline": 6416,
+      "wcet": 89,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0033",
+      "period": 10000,
+      "deadline": 5108,
+      "wcet": 249,
+      "bcet": 0,
+      "earliest_activation": 9551,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0034",
+      "period": 40000,
+      "deadline": 34928,
+      "wcet": 4172,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0035",
+      "period": 80000,
+      "deadline": 8517,
+      "wcet": 2517,
+      "bcet": 0,
+      "earliest_activation": 65913,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0036",
+      "period": 80000,
+      "deadline": 51764,
+      "wcet": 4180,
+      "bcet": 0,
+      "earliest_activation": 67045,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0037",
+      "period": 10000,
+      "deadline": 7459,
+      "wcet": 427,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0038",
+      "period": 40000,
+      "deadline": 40000,
+      "wcet": 3052,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0039",
+      "period": 10000,
+      "deadline": 6053,
+      "wcet": 724,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0040",
+      "period": 20000,
+      "deadline": 15479,
+      "wcet": 1005,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0041",
+      "period": 10000,
+      "deadline": 9402,
+      "wcet": 468,
+      "bcet": 0,
+      "earliest_activation": 2874,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0042",
+      "period": 40000,
+      "deadline": 40000,
+      "wcet": 1642,
+      "bcet": 0,
+      "earliest_activation": 7396,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0043",
+      "period": 80000,
+      "deadline": 77949,
+      "wcet": 4242,
+      "bcet": 0,
+      "earliest_activation": 7143,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0044",
+      "period": 10000,
+      "deadline": 4520,
+      "wcet": 178,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0045",
+      "period": 80000,
+      "deadline": 56419,
+      "wcet": 1639,
+      "bcet": 0,
+      "earliest_activation": 75758,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0046",
+      "period": 80000,
+      "deadline": 72620,
+      "wcet": 5222,
+      "bcet": 0,
+      "earliest_activation": 63253,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0047",
+      "period": 10000,
+      "deadline": 6128,
+      "wcet": 119,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0048",
+      "period": 10000,
+      "deadline": 9370,
+      "wcet": 346,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0049",
+      "period": 10000,
+      "deadline": 6576,
+      "wcet": 98,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0050",
+      "period": 40000,
+      "deadline": 872,
+      "wcet": 872,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0051",
+      "period": 80000,
+      "deadline": 75639,
+      "wcet": 1107,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0052",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 316,
+      "bcet": 0,
+      "earliest_activation": 8481,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0053",
+      "period": 10000,
+      "deadline": 4522,
+      "wcet": 147,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0054",
+      "period": 20000,
+      "deadline": 17982,
+      "wcet": 131,
+      "bcet": 0,
+      "earliest_activation": 2983,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0055",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 440,
+      "bcet": 0,
+      "earliest_activation": 1010,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0056",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 705,
+      "bcet": 0,
+      "earliest_activation": 9124,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0057",
+      "period": 5000,
+      "deadline": 5000,
+      "wcet": 386,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": 500,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0058",
+      "period": 80000,
+      "deadline": 7396,
+      "wcet": 493,
+      "bcet": 0,
+      "earliest_activation": 53757,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0059",
+      "period": 5000,
+      "deadline": 5000,
+      "wcet": 170,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0060",
+      "period": 40000,
+      "deadline": 3141,
+      "wcet": 838,
+      "bcet": 0,
+      "earliest_activation": 37781,
+      "max_jitter": 4000,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0061",
+      "period": 40000,
+      "deadline": 14525,
+      "wcet": 85,
+      "bcet": 0,
+      "earliest_activation": 29915,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0062",
+      "period": 80000,
+      "deadline": 13962,
+      "wcet": 9593,
+      "bcet": 0,
+      "earliest_activation": 72584,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0063",
+      "period": 80000,
+      "deadline": 80000,
+      "wcet": 3302,
+      "bcet": 0,
+      "earliest_activation": 35097,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0064",
+      "period": 10000,
+      "deadline": 7054,
+      "wcet": 801,
+      "bcet": 0,
+      "earliest_activation": 3319,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0065",
+      "period": 20000,
+      "deadline": 17428,
+      "wcet": 1085,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0066",
+      "period": 20000,
+      "deadline": 1415,
+      "wcet": 197,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0067",
+      "period": 10000,
+      "deadline": 1059,
+      "wcet": 1059,
+      "bcet": 0,
+      "earliest_activation": 7816,
+      "max_jitter": 1000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0068",
+      "period": 20000,
+      "deadline": 15373,
+      "wcet": 1024,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0069",
+      "period": 10000,
+      "deadline": 6904,
+      "wcet": 311,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0070",
+      "period": 20000,
+      "deadline": 16741,
+      "wcet": 3000,
+      "bcet": 0,
+      "earliest_activation": 5918,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0071",
+      "period": 20000,
+      "deadline": 5954,
+      "wcet": 268,
+      "bcet": 0,
+      "earliest_activation": 3274,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0072",
+      "period": 80000,
+      "deadline": 53380,
+      "wcet": 1527,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0073",
+      "period": 80000,
+      "deadline": 65811,
+      "wcet": 3260,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0074",
+      "period": 33333,
+      "deadline": 28493,
+      "wcet": 9326,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0075",
+      "period": 20000,
+      "deadline": 16340,
+      "wcet": 124,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0076",
+      "period": 40000,
+      "deadline": 2212,
+      "wcet": 1750,
+      "bcet": 0,
+      "earliest_activation": 26760,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0077",
+      "period": 20000,
+      "deadline": 16129,
+      "wcet": 830,
+      "bcet": 0,
+      "earliest_activation": 8390,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0078",
+      "period": 2500,
+      "deadline": 2500,
+      "wcet": 100,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0079",
+      "period": 40000,
+      "deadline": 36956,
+      "wcet": 353,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0080",
+      "period": 80000,
+      "deadline": 76644,
+      "wcet": 3989,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0081",
+      "period": 20000,
+      "deadline": 16475,
+      "wcet": 408,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0082",
+      "period": 5000,
+      "deadline": 5000,
+      "wcet": 122,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0083",
+      "period": 5000,
+      "deadline": 2183,
+      "wcet": 152,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": 500,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0084",
+      "period": 40000,
+      "deadline": 32973,
+      "wcet": 312,
+      "bcet": 0,
+      "earliest_activation": 26464,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0085",
+      "period": 40000,
+      "deadline": 38860,
+      "wcet": 4178,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0086",
+      "period": 10000,
+      "deadline": 9211,
+      "wcet": 3250,
+      "bcet": 0,
+      "earliest_activation": 9670,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0087",
+      "period": 80000,
+      "deadline": 12475,
+      "wcet": 9065,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0088",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 3108,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0089",
+      "period": 10000,
+      "deadline": 5787,
+      "wcet": 102,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0090",
+      "period": 10000,
+      "deadline": 10000,
+      "wcet": 316,
+      "bcet": 0,
+      "earliest_activation": 6416,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0091",
+      "period": 20000,
+      "deadline": 17448,
+      "wcet": 934,
+      "bcet": 0,
+      "earliest_activation": 5246,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0092",
+      "period": 10000,
+      "deadline": 7492,
+      "wcet": 1070,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0093",
+      "period": 20000,
+      "deadline": 15124,
+      "wcet": 1128,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0094",
+      "period": 40000,
+      "deadline": 40000,
+      "wcet": 711,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": false,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0095",
+      "period": 33333,
+      "deadline": 33333,
+      "wcet": 10525,
+      "bcet": 0,
+      "earliest_activation": 21777,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0096",
+      "period": 80000,
+      "deadline": 74091,
+      "wcet": 40000,
+      "bcet": 0,
+      "earliest_activation": 0,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 1,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0097",
+      "period": 20000,
+      "deadline": 15132,
+      "wcet": 951,
+      "bcet": 0,
+      "earliest_activation": 5297,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 2,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0098",
+      "period": 10000,
+      "deadline": 7079,
+      "wcet": 337,
+      "bcet": 0,
+      "earliest_activation": 9614,
+      "max_jitter": null,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    },
+    {
+      "name": "t_0099",
+      "period": 80000,
+      "deadline": 80000,
+      "wcet": 281,
+      "bcet": 0,
+      "earliest_activation": 77381,
+      "max_jitter": 8000,
+      "pinned": true,
+      "placement": {
+        "cpu_id": 0,
+        "core_id": null
+      }
+    }
+  ],
+  "chains": [
+    {
+      "name": "Chain0",
+      "semantic": "reaction-delay",
+      "budget": 130000,
+      "priority": 0.6,
+      "asil": "B",
+      "tasks": [
+        "t_0065",
+        "t_0006",
+        "t_0057",
+        "t_0014",
+        "t_0069",
+        "t_0031",
+        "t_0000",
+        "t_0056",
+        "t_0047",
+        "t_0006",
+        "t_0015"
+      ]
+    },
+    {
+      "name": "Chain1",
+      "semantic": "reaction-delay",
+      "budget": 125000,
+      "priority": 0.0,
+      "asil": "B",
+      "tasks": [
+        "t_0010",
+        "t_0083",
+        "t_0057",
+        "t_0015",
+        "t_0025",
+        "t_0024",
+        "t_0012",
+        "t_0088",
+        "t_0000",
+        "t_0088",
+        "t_0059",
+        "t_0008",
+        "t_0014",
+        "t_0082"
+      ]
+    },
+    {
+      "name": "Chain2",
+      "semantic": "reaction-delay",
+      "budget": 97500,
+      "priority": 0.5,
+      "asil": "B",
+      "tasks": [
+        "t_0094",
+        "t_0015",
+        "t_0088",
+        "t_0066",
+        "t_0014",
+        "t_0059"
+      ]
+    },
+    {
+      "name": "Chain3",
+      "semantic": "reaction-delay",
+      "budget": 107500,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0085",
+        "t_0059",
+        "t_0015",
+        "t_0000",
+        "t_0025",
+        "t_0014",
+        "t_0057",
+        "t_0008",
+        "t_0075",
+        "t_0082",
+        "t_0083",
+        "t_0008",
+        "t_0092",
+        "t_0056"
+      ]
+    },
+    {
+      "name": "Chain4",
+      "semantic": "reaction-delay",
+      "budget": 175000,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0004",
+        "t_0015",
+        "t_0057",
+        "t_0014",
+        "t_0008",
+        "t_0059",
+        "t_0065",
+        "t_0008",
+        "t_0003",
+        "t_0009",
+        "t_0094",
+        "t_0082",
+        "t_0083",
+        "t_0025"
+      ]
+    },
+    {
+      "name": "Chain5",
+      "semantic": "reaction-delay",
+      "budget": 315000,
+      "priority": 0.0,
+      "asil": "B",
+      "tasks": [
+        "t_0029",
+        "t_0041",
+        "t_0015",
+        "t_0066",
+        "t_0090",
+        "t_0012",
+        "t_0049",
+        "t_0015",
+        "t_0011",
+        "t_0039"
+      ]
+    },
+    {
+      "name": "Chain6",
+      "semantic": "reaction-delay",
+      "budget": 102500,
+      "priority": 0.0,
+      "asil": "B",
+      "tasks": [
+        "t_0012",
+        "t_0040",
+        "t_0028",
+        "t_0015",
+        "t_0065",
+        "t_0014",
+        "t_0025",
+        "t_0059",
+        "t_0059",
+        "t_0057"
+      ]
+    },
+    {
+      "name": "Chain7",
+      "semantic": "reaction-delay",
+      "budget": 72500,
+      "priority": 0.75,
+      "asil": "B",
+      "tasks": [
+        "t_0065",
+        "t_0014",
+        "t_0059",
+        "t_0057",
+        "t_0082",
+        "t_0015",
+        "t_0077",
+        "t_0083",
+        "t_0008",
+        "t_0028",
+        "t_0025"
+      ]
+    },
+    {
+      "name": "Chain8",
+      "semantic": "reaction-delay",
+      "budget": 137500,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0012",
+        "t_0037",
+        "t_0003",
+        "t_0069",
+        "t_0025",
+        "t_0039",
+        "t_0024",
+        "t_0097",
+        "t_0014",
+        "t_0015",
+        "t_0075",
+        "t_0059",
+        "t_0008",
+        "t_0057",
+        "t_0082",
+        "t_0083"
+      ]
+    },
+    {
+      "name": "Chain9",
+      "semantic": "reaction-delay",
+      "budget": 337500,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0065",
+        "t_0066",
+        "t_0094",
+        "t_0028",
+        "t_0015",
+        "t_0054",
+        "t_0014",
+        "t_0070",
+        "t_0014",
+        "t_0059",
+        "t_0057",
+        "t_0076"
+      ]
+    },
+    {
+      "name": "Chain10",
+      "semantic": "reaction-delay",
+      "budget": 162500,
+      "priority": 0.5,
+      "asil": "B",
+      "tasks": [
+        "t_0040",
+        "t_0086",
+        "t_0059",
+        "t_0009",
+        "t_0015",
+        "t_0093",
+        "t_0014",
+        "t_0057",
+        "t_0082",
+        "t_0082",
+        "t_0083",
+        "t_0030"
+      ]
+    },
+    {
+      "name": "Chain11",
+      "semantic": "reaction-delay",
+      "budget": 25000,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0061",
+        "t_0061"
+      ]
+    },
+    {
+      "name": "Chain12",
+      "semantic": "reaction-delay",
+      "budget": 212500,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0032",
+        "t_0000",
+        "t_0052",
+        "t_0004",
+        "t_0015",
+        "t_0075",
+        "t_0006",
+        "t_0066",
+        "t_0000"
+      ]
+    },
+    {
+      "name": "Chain13",
+      "semantic": "reaction-delay",
+      "budget": 142500,
+      "priority": 0.8,
+      "asil": "B",
+      "tasks": [
+        "t_0004",
+        "t_0054",
+        "t_0057",
+        "t_0015",
+        "t_0075",
+        "t_0071",
+        "t_0014",
+        "t_0059",
+        "t_0059"
+      ]
+    },
+    {
+      "name": "Chain14",
+      "semantic": "reaction-delay",
+      "budget": 200000,
+      "priority": 0.4,
+      "asil": "C",
+      "tasks": [
+        "t_0075",
+        "t_0059",
+        "t_0059",
+        "t_0065",
+        "t_0015",
+        "t_0028",
+        "t_0014",
+        "t_0057",
+        "t_0040",
+        "t_0008"
+      ]
+    },
+    {
+      "name": "Chain15",
+      "semantic": "reaction-delay",
+      "budget": 115000,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0065",
+        "t_0015",
+        "t_0059",
+        "t_0015",
+        "t_0076",
+        "t_0048",
+        "t_0082"
+      ]
+    },
+    {
+      "name": "Chain16",
+      "semantic": "reaction-delay",
+      "budget": 100000,
+      "priority": 0.95,
+      "asil": "B",
+      "tasks": [
+        "t_0066",
+        "t_0014",
+        "t_0059",
+        "t_0082",
+        "t_0014"
+      ]
+    },
+    {
+      "name": "Chain17",
+      "semantic": "reaction-delay",
+      "budget": 55000,
+      "priority": 0.0,
+      "asil": "B",
+      "tasks": [
+        "t_0057",
+        "t_0011",
+        "t_0025",
+        "t_0015",
+        "t_0015"
+      ]
+    },
+    {
+      "name": "Chain18",
+      "semantic": "reaction-delay",
+      "budget": 125000,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0084",
+        "t_0088",
+        "t_0000",
+        "t_0071",
+        "t_0057",
+        "t_0057",
+        "t_0075",
+        "t_0014",
+        "t_0059",
+        "t_0083",
+        "t_0008",
+        "t_0091",
+        "t_0082",
+        "t_0040"
+      ]
+    },
+    {
+      "name": "Chain19",
+      "semantic": "reaction-delay",
+      "budget": 127500,
+      "priority": 0.95,
+      "asil": "B",
+      "tasks": [
+        "t_0012",
+        "t_0047",
+        "t_0075",
+        "t_0059",
+        "t_0057",
+        "t_0014",
+        "t_0015",
+        "t_0000",
+        "t_0040",
+        "t_0014",
+        "t_0030",
+        "t_0067",
+        "t_0097",
+        "t_0082",
+        "t_0008",
+        "t_0090",
+        "t_0032"
+      ]
+    },
+    {
+      "name": "Chain20",
+      "semantic": "reaction-delay",
+      "budget": 130000,
+      "priority": 0.0,
+      "asil": "B",
+      "tasks": [
+        "t_0004",
+        "t_0003",
+        "t_0009",
+        "t_0057",
+        "t_0039",
+        "t_0047",
+        "t_0075",
+        "t_0014",
+        "t_0059",
+        "t_0015",
+        "t_0082",
+        "t_0075",
+        "t_0000",
+        "t_0012",
+        "t_0083"
+      ]
+    },
+    {
+      "name": "Chain21",
+      "semantic": "reaction-delay",
+      "budget": 57500,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0040",
+        "t_0075",
+        "t_0015",
+        "t_0057",
+        "t_0015",
+        "t_0014",
+        "t_0083",
+        "t_0071",
+        "t_0008"
+      ]
+    },
+    {
+      "name": "Chain22",
+      "semantic": "reaction-delay",
+      "budget": 37500,
+      "priority": 0.65,
+      "asil": null,
+      "tasks": [
+        "t_0094",
+        "t_0015",
+        "t_0003",
+        "t_0057",
+        "t_0057"
+      ]
+    },
+    {
+      "name": "Chain23",
+      "semantic": "reaction-delay",
+      "budget": 227500,
+      "priority": 0.0,
+      "asil": "B",
+      "tasks": [
+        "t_0004",
+        "t_0011",
+        "t_0094",
+        "t_0065",
+        "t_0015",
+        "t_0014",
+        "t_0075",
+        "t_0059",
+        "t_0082",
+        "t_0056"
+      ]
+    },
+    {
+      "name": "Chain24",
+      "semantic": "reaction-delay",
+      "budget": 85000,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0040",
+        "t_0014",
+        "t_0015",
+        "t_0059",
+        "t_0071",
+        "t_0014",
+        "t_0065",
+        "t_0082",
+        "t_0005",
+        "t_0083",
+        "t_0008"
+      ]
+    },
+    {
+      "name": "Chain25",
+      "semantic": "reaction-delay",
+      "budget": 185000,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0010",
+        "t_0076",
+        "t_0004",
+        "t_0050",
+        "t_0008",
+        "t_0057",
+        "t_0033",
+        "t_0026",
+        "t_0064",
+        "t_0065",
+        "t_0059",
+        "t_0016",
+        "t_0025",
+        "t_0053",
+        "t_0017"
+      ]
+    },
+    {
+      "name": "Chain26",
+      "semantic": "reaction-delay",
+      "budget": 155000,
+      "priority": 0.7,
+      "asil": "B",
+      "tasks": [
+        "t_0028",
+        "t_0028",
+        "t_0030",
+        "t_0005",
+        "t_0071",
+        "t_0014",
+        "t_0057",
+        "t_0081"
+      ]
+    },
+    {
+      "name": "Chain27",
+      "semantic": "reaction-delay",
+      "budget": 120000,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0094",
+        "t_0032",
+        "t_0050",
+        "t_0059",
+        "t_0014",
+        "t_0047",
+        "t_0027",
+        "t_0015",
+        "t_0083",
+        "t_0057",
+        "t_0015",
+        "t_0065",
+        "t_0008"
+      ]
+    },
+    {
+      "name": "Chain28",
+      "semantic": "reaction-delay",
+      "budget": 240000,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0042",
+        "t_0024",
+        "t_0014",
+        "t_0059",
+        "t_0075",
+        "t_0057",
+        "t_0028",
+        "t_0014",
+        "t_0083",
+        "t_0012",
+        "t_0041"
+      ]
+    },
+    {
+      "name": "Chain29",
+      "semantic": "reaction-delay",
+      "budget": 175000,
+      "priority": 0.75,
+      "asil": null,
+      "tasks": [
+        "t_0094",
+        "t_0014",
+        "t_0057",
+        "t_0082",
+        "t_0071",
+        "t_0008",
+        "t_0093",
+        "t_0082",
+        "t_0076"
+      ]
+    },
+    {
+      "name": "Chain30",
+      "semantic": "reaction-delay",
+      "budget": 160000,
+      "priority": 0.7,
+      "asil": null,
+      "tasks": [
+        "t_0076",
+        "t_0004",
+        "t_0067",
+        "t_0069",
+        "t_0048",
+        "t_0012",
+        "t_0006",
+        "t_0003",
+        "t_0057",
+        "t_0037",
+        "t_0029",
+        "t_0059",
+        "t_0012",
+        "t_0014"
+      ]
+    },
+    {
+      "name": "Chain31",
+      "semantic": "reaction-delay",
+      "budget": 92500,
+      "priority": 0.55,
+      "asil": "B",
+      "tasks": [
+        "t_0065",
+        "t_0057",
+        "t_0059",
+        "t_0014",
+        "t_0015",
+        "t_0039",
+        "t_0065",
+        "t_0008",
+        "t_0032",
+        "t_0079",
+        "t_0071"
+      ]
+    },
+    {
+      "name": "Chain32",
+      "semantic": "reaction-delay",
+      "budget": 77500,
+      "priority": 1.0,
+      "asil": null,
+      "tasks": [
+        "t_0079",
+        "t_0000",
+        "t_0075",
+        "t_0057",
+        "t_0014",
+        "t_0059",
+        "t_0071",
+        "t_0015",
+        "t_0008",
+        "t_0082",
+        "t_0083",
+        "t_0065"
+      ]
+    },
+    {
+      "name": "Chain33",
+      "semantic": "reaction-delay",
+      "budget": 95000,
+      "priority": 0.8,
+      "asil": "C",
+      "tasks": [
+        "t_0003",
+        "t_0057",
+        "t_0056",
+        "t_0014",
+        "t_0059",
+        "t_0015",
+        "t_0083",
+        "t_0008",
+        "t_0082",
+        "t_0005",
+        "t_0032",
+        "t_0044",
+        "t_0057"
+      ]
+    },
+    {
+      "name": "Chain34",
+      "semantic": "reaction-delay",
+      "budget": 152500,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0025",
+        "t_0057",
+        "t_0094",
+        "t_0020",
+        "t_0015",
+        "t_0014",
+        "t_0008",
+        "t_0028",
+        "t_0071",
+        "t_0057"
+      ]
+    },
+    {
+      "name": "Chain35",
+      "semantic": "reaction-delay",
+      "budget": 480000,
+      "priority": 1.0,
+      "asil": "B",
+      "tasks": [
+        "t_0000",
+        "t_0094",
+        "t_0076",
+        "t_0000",
+        "t_0065",
+        "t_0071",
+        "t_0059",
+        "t_0015",
+        "t_0057",
+        "t_0014"
+      ]
+    },
+    {
+      "name": "Chain36",
+      "semantic": "reaction-delay",
+      "budget": 90000,
+      "priority": 0.7,
+      "asil": "B",
+      "tasks": [
+        "t_0060",
+        "t_0004",
+        "t_0014",
+        "t_0059",
+        "t_0057",
+        "t_0082",
+        "t_0004",
+        "t_0008",
+        "t_0083",
+        "t_0068",
+        "t_0041"
+      ]
+    },
+    {
+      "name": "Chain37",
+      "semantic": "reaction-delay",
+      "budget": 97500,
+      "priority": 0.75,
+      "asil": "B",
+      "tasks": [
+        "t_0047",
+        "t_0009",
+        "t_0041",
+        "t_0064",
+        "t_0060",
+        "t_0028",
+        "t_0014",
+        "t_0060",
+        "t_0025"
+      ]
+    }
+  ]
+}
