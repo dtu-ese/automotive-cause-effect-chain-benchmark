@@ -13,20 +13,16 @@ If you use this benchmark or generator, please cite the Zenodo release:
 Craciunas, Silviu; Becker, Matthias; Pop, Paul. *Automotive Cause-Effect Chains in the Wild: A Real-World Industrial Benchmark and Generator*. Zenodo, v1, June 2026. https://doi.org/10.5281/zenodo.20637979. Presented at the 15th International Real-Time Systems Open Problems Seminar (RTSOPS 2026).
 
 ```bibtex
-@misc{craciunas_2026_20637979,
-  author       = {Craciunas, Silviu and
-                  Becker, Matthias and
-                  Pop, Paul},
-  title        = {Automotive Cause-Effect Chains in the Wild: A
-                   Real-World Industrial Benchmark and Generator
-                  },
+@misc{CraciunasRTSOPS26,
+  author       = {Craciunas, Silviu S. and Becker, Matthias and Pop, Paul},
+  title        = {Automotive Cause-Effect Chains in the Wild: A Real-World Industrial Benchmark and Generator},
   month        = jun,
   year         = 2026,
   publisher    = {Zenodo},
   version      = {v1},
   doi          = {10.5281/zenodo.20637979},
   url          = {https://doi.org/10.5281/zenodo.20637979},
-  note         = {Presented at the 15th International Real-Time Systems Open Problems Seminar (RTSOPS 2026). GitHub repository: https://github.com/dtu-ese/automotive-cause-effect-chain-benchmark}
+  note         = {Presented at the 15th International Real-Time Systems Open Problems Seminar (RTSOPS 2026)}
 }
 ```
 
