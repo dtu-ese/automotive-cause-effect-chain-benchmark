@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """generator: consume a fingerprint (per
-``data/fingerprints/SCHEMA.md``) and emit synthetic task-set JSON
+``fingerprints/SCHEMA.md``) and emit synthetic task-set JSON
 instances.  Output schema is the released instance format so
 ``check.py`` and any downstream analyzer consumes the output
 unchanged.
@@ -18,7 +18,23 @@ import os
 import random
 import sys
 from collections import defaultdict
+from fractions import Fraction
 from pathlib import Path
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from check import core_schedulable                                  # noqa: E402
+
+BENCHMARK_VERSION = '2.0'
+REFERENCE_SCHEDULE = (
+    'placement (cpu_id, core_id) is a reference allocation under which '
+    'every task meets its deadline with partitioned preemptive '
+    'fixed-priority scheduling and deadline-monotonic priorities (ties '
+    'broken by period, then task name).  Jobs are released at '
+    'earliest_activation + k * period, possibly delayed by up to '
+    'max_jitter (release jitter); deadlines are relative to the nominal '
+    'release.  Verified by jitter-aware response-time analysis, which '
+    'holds for arbitrary offsets; see check.py.'
+)
 
 
 # ---------------------------------------------------------------------------
@@ -102,6 +118,9 @@ def _sample_exec(rng: random.Random, entry: dict, eps: float) -> dict:
     - **histogram** — the fitter binned the source pool's per-task
       WCETs.  Returns ``{wcet, bcet=0}``; histogram-form fingerprints
       do not carry per-task BCET/ACET landmarks.
+    - **aggregate, factor variant** (``wcet_factor_range`` present) —
+      the execution-time model of Kramer et al., see
+      :func:`_sample_exec_factors`.
     - **aggregate** — Kramer-2015 / WATERS-style aggregate with a
       ``wcet_range`` envelope and optionally ``bcet_range``,
       ``acet_range``, ``wcet_min_range``, and an ``exec_distribution``
@@ -109,10 +128,10 @@ def _sample_exec(rng: random.Random, entry: dict, eps: float) -> dict:
       through to the released task so analyzers that consume them
       (Bi 22, Becker 17, …) see the WATERS execution-time semantics.
 
-    The WCET is finally clamped to ``entry['wcet_envelope']`` (the
-    strict per-period [min, max] of the source pool) and a ±ε
-    multiplicative jitter is applied; BCET/ACET are clamped to
-    preserve the BCET ≤ ACET ≤ WCET invariant.
+    A ±ε multiplicative perturbation is applied to the WCET, which is then
+    clamped to ``entry['wcet_envelope']`` (the strict per-period
+    [min, max] of the source pool); BCET/ACET are clamped to preserve
+    the BCET ≤ ACET ≤ WCET invariant.
     """
     wcet_def = entry['wcet']
     env_lo, env_hi = entry['wcet_envelope']
@@ -125,6 +144,8 @@ def _sample_exec(rng: random.Random, entry: dict, eps: float) -> dict:
         return {'wcet': wcet, 'bcet': 0}
 
     agg = wcet_def['aggregate']
+    if 'wcet_factor_range' in agg:
+        return _sample_exec_factors(rng, agg, eps, env_lo, env_hi)
     wmin, wmax = agg['wcet_range']
     dist = agg.get('distribution')
 
@@ -180,6 +201,41 @@ def _sample_exec(rng: random.Random, entry: dict, eps: float) -> dict:
         out['exec_distribution'] = dict(dist)
 
     return out
+
+
+def _sample_exec_factors(rng: random.Random, agg: dict, eps: float,
+                         env_lo: int, env_hi: int) -> dict:
+    """Execution-time model of Kramer et al. (WATERS 2015), used when the
+    aggregate form carries ``wcet_factor_range``.  The ACET follows the
+    entry's ``acet_distribution`` (Weibull, or uniform) truncated to
+    ``acet_range``; BCET and WCET are the ACET times factors drawn
+    uniformly from ``bcet_factor_range`` and ``wcet_factor_range``.  The
+    ±ε perturbation applies to the WCET factor, which stays inside its
+    range.  Times are rounded to integer microseconds with a floor of
+    1 µs, keeping 1 ≤ bcet ≤ acet ≤ wcet; the factor ratios hold before
+    rounding (sub-microsecond ACETs, e.g. of the 1000 ms class, become
+    1 µs)."""
+    a_lo, a_hi = agg['acet_range']
+    dist = agg.get('acet_distribution') or {'kind': 'uniform'}
+    acet = None
+    if dist.get('kind') == 'weibull':
+        for _ in range(1000):
+            # random.weibullvariate(scale, shape)
+            x = rng.weibullvariate(dist['scale'], dist['shape'])
+            if a_lo <= x <= a_hi:
+                acet = x
+                break
+    if acet is None:
+        acet = rng.uniform(a_lo, a_hi)
+    fb_lo, fb_hi = agg['bcet_factor_range']
+    fw_lo, fw_hi = agg['wcet_factor_range']
+    bcet_raw = acet * rng.uniform(fb_lo, fb_hi)
+    f_w = rng.uniform(fw_lo, fw_hi) * (1 + rng.uniform(-eps, +eps))
+    wcet_raw = acet * min(fw_hi, max(fw_lo, f_w))
+    wcet = max(env_lo, min(env_hi, max(1, int(round(wcet_raw)))))
+    acet_us = min(wcet, max(1, int(round(acet))))
+    bcet = min(acet_us, max(1, int(round(bcet_raw))))
+    return {'wcet': wcet, 'bcet': bcet, 'acet': acet_us}
 
 
 def _build_task_from_entry(rng: random.Random, entry: dict, T: int,
@@ -275,8 +331,10 @@ def apply_global_jitter(rng: random.Random, profile: dict,
 
 
 def assign_cpus(rng: random.Random, tasks: list[dict], cpus: list[dict]) -> bool:
-    """Best-fit assign each task to a CPU and a core under u <= 1.
-    Returns False if any task fails to fit."""
+    """Capacity pre-check: assign each task (heaviest first) to the
+    least-loaded CPU and core under u <= 1.  Returns False if any task fails to fit, in which case
+    the instance is redrawn.  The final placement is made later by
+    :func:`make_schedulable`."""
     # Per-CPU per-core utilisation tracker.
     core_u: dict[tuple[int, int], float] = {}
     for c in cpus:
@@ -301,8 +359,8 @@ def assign_cpus(rng: random.Random, tasks: list[dict], cpus: list[dict]) -> bool
                     core_u[(cid, coid)] += u
                     cpu_u[cid] += u
                     t['placement']['cpu_id'] = cid
-                    # Released JSON ships core_id = null — keep it that
-                    # way; the evaluator re-runs the allocation.
+                    # Pre-check only: make_schedulable() later computes
+                    # the shipped placement.
                     t['placement']['core_id'] = None
                     placed = True
                     break
@@ -311,6 +369,206 @@ def assign_cpus(rng: random.Random, tasks: list[dict], cpus: list[dict]) -> bool
         if not placed:
             return False
     return True
+
+
+def assign_cores(tasks: list[dict], cpus: list[dict]) -> list[dict]:
+    """Schedulability-aware placement (least-loaded first).
+
+    Tasks are visited in order of decreasing density (wcet +
+    max_jitter) / deadline, ties by name, so that tasks with little
+    slack are placed while cores are still empty.  Each task goes to
+    the CPU with the smallest per-core load (sum u / #cores, ties by
+    CPU id) and, within it, to the least-loaded core (ties by core id)
+    on which the core stays schedulable under partitioned preemptive
+    fixed-priority scheduling with deadline-monotonic priorities
+    (jitter-aware response-time analysis, R <= D for every task on the
+    core; see ``check.response_times``).  Sets ``placement`` in place
+    and returns the tasks that fit on no core.
+    """
+    cpu_cores = {c['id']: [co['id'] for co in c['cores']] for c in cpus}
+    core_tasks = {(c, co): [] for c in cpu_cores for co in cpu_cores[c]}
+    core_u = {k: Fraction(0) for k in core_tasks}   # exact, see check.py
+
+    def cpu_load(cid: int) -> float:
+        return sum(core_u[(cid, co)] for co in cpu_cores[cid]) / len(cpu_cores[cid])
+
+    unplaced: list[dict] = []
+    def density(t: dict) -> float:
+        return (t['wcet'] + (t.get('max_jitter') or 0)) / t['deadline']
+
+    for t in sorted(tasks, key=lambda t: (-density(t), t['name'])):
+        u = Fraction(t['wcet'], t['period'])
+        placed = False
+        for cid in sorted(cpu_cores, key=lambda c: (cpu_load(c), c)):
+            for coid in sorted(cpu_cores[cid], key=lambda co: (core_u[(cid, co)], co)):
+                key = (cid, coid)
+                if core_u[key] + u > 1.0:
+                    continue
+                if not core_schedulable(core_tasks[key] + [t]):
+                    continue
+                core_tasks[key].append(t)
+                core_u[key] += u
+                t['placement'] = {'cpu_id': cid, 'core_id': coid}
+                placed = True
+                break
+            if placed:
+                break
+        if not placed:
+            unplaced.append(t)
+    return unplaced
+
+
+def _admissible_jitter(profile: dict, tasks: list[dict]) -> int:
+    """A release jitter J with J + WCET > D makes a task unschedulable
+    under any policy.  Lower such a task's jitter to the largest of the
+    fingerprint's jitter ratios that still fits (no jitter if none
+    does).  Deterministic, so it does not perturb the random stream.
+    Returns the number of tasks changed."""
+    ratios = sorted({v[0] for v in (profile.get('jitter') or {}).get('values', [])},
+                    reverse=True)
+    changed = 0
+    for t in tasks:
+        J = t.get('max_jitter')
+        if not J or J + t['wcet'] <= t['deadline']:
+            continue
+        new = None
+        for r in ratios:
+            v = int(round(r * t['period']))
+            if v < J and v + t['wcet'] <= t['deadline']:
+                new = v
+                break
+        t['max_jitter'] = new
+        changed += 1
+    return changed
+
+
+def _positive_slack_deadlines(profile: dict, tasks: list[dict],
+                               seed_tag: str) -> int:
+    """Sampling draws WCET and D/T independently and clamps D up to the
+    WCET when the drawn deadline is shorter, which yields tasks with
+    WCET = deadline (zero slack).  Redraw the deadline of every such
+    task from its D/T histogram restricted to deadlines strictly above
+    the WCET (each bin truncated to its admissible part, weights scaled
+    by the admissible fraction, uniform within the bin).  A separate
+    random stream seeded per task keeps the main stream, and therefore
+    everything else in the instance, unchanged.  Returns the number of
+    deadlines redrawn, or None if some task has wcet >= period (no
+    admissible deadline exists; the instance is then redrawn)."""
+    redrawn = 0
+    for t in tasks:
+        T, C = t['period'], t['wcet']
+        if t['deadline'] > C:
+            continue
+        if C >= T:
+            return None
+        entry = None
+        if t.get('activation'):          # variable-period task class
+            for vp in profile.get('variable_period', []) or []:
+                lo_T, hi_T = vp['period_range_us']
+                if lo_T <= T <= hi_T and vp.get('activation') == t['activation']:
+                    entry = vp
+                    break
+        else:
+            entry = profile.get('per_period', {}).get(str(T))
+        hist = (entry or {}).get('deadline_ratio_hist',
+                                 [{'bin': [1.0, 1.0001], 'count': 100}])
+        lo_dt = (C + 1) / T
+        parts = []
+        for b in hist:
+            lo, hi = b['bin']
+            if hi > 1.0:                 # implicit-deadline sentinel
+                lo, hi = 1.0, 1.0
+                frac = 1.0
+            elif hi == lo:               # point mass (e.g. D = T/2)
+                frac = 1.0 if int(round(lo * T)) > C else 0.0
+            else:
+                lo = max(lo, lo_dt)
+                frac = (hi - lo) / (b['bin'][1] - b['bin'][0]) if hi > lo else 0.0
+            if b['count'] > 0 and frac > 0:
+                parts.append((lo, hi, b['count'] * frac))
+        prng = random.Random(f'{seed_tag}:{t["name"]}')
+        if parts:
+            lo, hi, _ = weighted_choice(prng, parts, [w for _, _, w in parts])
+            dt = prng.uniform(lo, hi)
+        else:
+            dt = 1.0
+        t['deadline'] = min(T, max(C + 1, int(round(dt * T))))
+        redrawn += 1
+    return redrawn
+
+
+def _scale_exec(t: dict, alpha: Fraction) -> None:
+    """Scale every execution-time field of a task by alpha (floored)."""
+    for k in ('wcet', 'bcet', 'acet', 'wcet_min'):
+        if k in t and t[k]:
+            t[k] = max(1, int(alpha * t[k]))
+    if t.get('bcet', 0) > t['wcet']:
+        t['bcet'] = t['wcet']
+
+
+def _wrap_offsets(tasks: list[dict]) -> int:
+    """The top EA bin reaches slightly beyond 1.0 * T, so a few sampled
+    offsets are >= T.  A release offset is only meaningful modulo the
+    period; reduce such offsets modulo T.  Returns the number changed."""
+    changed = 0
+    for t in tasks:
+        if t['earliest_activation'] >= t['period']:
+            t['earliest_activation'] %= t['period']
+            changed += 1
+    return changed
+
+
+ALPHA_STEPS = 200          # WCET scaling grid: alpha in {1, 0.995, ..., 0.005}
+
+
+def make_schedulable(profile: dict, inst: dict, seed_tag: str) -> dict | None:
+    """Turn a sampled instance into one that is schedulable under a
+    reference allocation (partitioned preemptive FP, deadline-monotonic
+    priorities, jitter-aware RTA).
+
+    ``earliest_activation`` is a release offset and ``max_jitter`` a
+    release jitter; deadlines are relative to the nominal release.
+
+    0. Offsets >= T are reduced modulo T, see :func:`_wrap_offsets`.
+    1. Deadlines with WCET >= D are redrawn so that every task has
+       positive slack, see :func:`_positive_slack_deadlines`.
+    2. Inadmissible release jitter (J + WCET > D) is lowered, see
+       :func:`_admissible_jitter`.
+    3. All execution times are scaled by the largest alpha on the grid
+       {1, 0.995, ..., 0.005} (scanned downwards) for which
+       :func:`assign_cores` places every task.  Periods, chains and
+       budgets are left untouched.
+    4. The resulting placement is written to ``placement``.
+
+    Returns {'alpha', 'jitter_lowered', 'deadlines_redrawn',
+    'offsets_wrapped'}, or None if no grid value works (the caller then
+    redraws the instance).
+    """
+    tasks = inst['tasks']
+    cpus = inst['platform']['cpus']
+    offsets_wrapped = _wrap_offsets(tasks)
+    deadlines_redrawn = _positive_slack_deadlines(profile, tasks, seed_tag)
+    if deadlines_redrawn is None:
+        return None
+    jitter_lowered = _admissible_jitter(profile, tasks)
+    orig = {t['name']: {k: t[k] for k in ('wcet', 'bcet', 'acet', 'wcet_min')
+                        if k in t} for t in tasks}
+
+    def try_alpha(alpha: Fraction) -> bool:
+        for t in tasks:
+            t.update(orig[t['name']])
+            _scale_exec(t, alpha)
+        return not assign_cores(tasks, cpus)
+
+    # Placement success is not monotone in alpha, so scan the grid
+    # downwards and keep the first (= largest) value that works.
+    for k in range(ALPHA_STEPS, 0, -1):
+        alpha = Fraction(k, ALPHA_STEPS)
+        if try_alpha(alpha):
+            return {'alpha': float(alpha), 'jitter_lowered': jitter_lowered,
+                    'deadlines_redrawn': deadlines_redrawn,
+                    'offsets_wrapped': offsets_wrapped}
+    return None
 
 
 def sample_one_chain(rng: random.Random, profile: dict, tasks_by_period: dict,
@@ -451,6 +709,57 @@ def sample_one_chain(rng: random.Random, profile: dict, tasks_by_period: dict,
     }
 
 
+def sample_waters_chain(rng: random.Random, profile: dict,
+                        tasks_by_period: dict, chain_idx: int,
+                        length_multiplier: int = 1) -> dict | None:
+    """Cause-effect chain model of Kramer et al. (WATERS 2015), used when
+    ``chains.model == "waters2015"``.  The number of involved activation
+    patterns (Table VI) and, per pattern, the number of tasks (Table VII,
+    times ``length_multiplier``) are drawn first.  Each pattern then gets
+    a distinct static period, chosen uniformly among the periods that
+    still have enough tasks, and that many distinct tasks of it.  The
+    tasks of a pattern are consecutive, so there are no cyclic
+    transitions between patterns; the budget is the sum of the involved
+    patterns' periods.  If the chain's sum of WCETs exceeds the budget,
+    the periods and tasks are redrawn (the counts are kept)."""
+    wm = profile['chains']['waters2015']
+    pats = wm['patterns_per_chain']
+    runs = wm['runnables_per_pattern']
+    pools = {T: [t for t in tasks_by_period.get(T, []) if not t.get('activation')]
+             for T in profile['periods_us']}
+    for _ in range(100):
+        n_p = weighted_choice(rng, [p['value'] for p in pats],
+                              [p['share'] for p in pats])
+        sizes = [weighted_choice(rng, [r['value'] for r in runs],
+                                 [r['share'] for r in runs]) * max(1, length_multiplier)
+                 for _ in range(n_p)]
+        for _ in range(20):
+            avail = [T for T in profile['periods_us'] if pools[T]]
+            chosen: list[int] = []
+            picked: list[dict] = []
+            for n_r in sizes:
+                cand = [T for T in avail if len(pools[T]) >= n_r]
+                if not cand:
+                    break
+                T = rng.choice(cand)
+                avail.remove(T)
+                chosen.append(T)
+                picked += rng.sample(pools[T], n_r)
+            if len(chosen) < n_p:
+                break                       # instance too small: redraw the counts
+            budget = sum(chosen)
+            if sum(t['wcet'] for t in picked) <= budget:
+                return {
+                    'name':     f'Chain{chain_idx}',
+                    'semantic': 'reaction-delay',
+                    'budget':   budget,
+                    'priority': 0,
+                    'asil':     None,
+                    'tasks':    [t['name'] for t in picked],
+                }
+    return None
+
+
 def _calibrate_repeats(rng: random.Random, chains: list[dict],
                        profile: dict) -> None:
     """Same-task reuse: Bernoulli per chain with uniformly-random
@@ -488,12 +797,20 @@ def _calibrate_repeats(rng: random.Random, chains: list[dict],
                 c['budget'] = ((new_sum_wcet + rho_grid - 1) // rho_grid) * rho_grid
 
 
-def generate_one(rng: random.Random, profile: dict, scale: int,
+def generate_one(profile: dict, scale: int,
                  eps: float, idx: int,
                  max_retries: int = 50,
                  utilization_cap: float = 0.95,
-                 length_scaling: str = 'scale') -> dict | None:
-    """Generate one feasible synthetic instance."""
+                 length_scaling: str = 'scale',
+                 *, seed: int) -> dict | None:
+    """Generate one feasible synthetic instance.
+
+    Each instance draws its tasks and its chains from two separate random
+    streams seeded by (seed, scale, index), so every instance can be
+    reproduced on its own and a change to the chain model leaves the
+    tasks unchanged."""
+    rng = random.Random(f'{seed}:{scale}:{idx}:tasks')
+    crng = random.Random(f'{seed}:{scale}:{idx}:chains')
     for attempt in range(max_retries):
         cpus = build_platform(profile, scale)
         n_cpus = len(cpus)
@@ -521,7 +838,7 @@ def generate_one(rng: random.Random, profile: dict, scale: int,
         # Global jitter pass.
         apply_global_jitter(rng, profile, tasks)
 
-        # Best-fit allocate and verify total-cap safety margin.
+        # Capacity pre-check and total-cap safety margin.
         if not assign_cpus(rng, tasks, cpus):
             continue
         total_u = sum(t['wcet'] / t['period'] for t in tasks)
@@ -529,7 +846,7 @@ def generate_one(rng: random.Random, profile: dict, scale: int,
         if total_u > utilization_cap * total_cores:
             continue
 
-        # Reset core_id (released schema requirement).
+        # Reset the pre-check placement; make_schedulable() places.
         for t in tasks:
             t['placement']['core_id'] = None
 
@@ -547,11 +864,16 @@ def generate_one(rng: random.Random, profile: dict, scale: int,
         # end-to-end functionality per chain.  `length_scaling='source'`
         # opts out and keeps L identically distributed to the source.
         length_mult = scale if length_scaling == 'scale' else 1
+        waters_chains = profile.get('chains', {}).get('model') == 'waters2015'
         chains: list[dict] = []
         for ci in range(n_chains):
-            c = sample_one_chain(rng, profile, tasks_by_period,
-                                 name_to_task, ci, eps,
-                                 length_multiplier=length_mult)
+            if waters_chains:
+                c = sample_waters_chain(crng, profile, tasks_by_period, ci,
+                                        length_multiplier=length_mult)
+            else:
+                c = sample_one_chain(crng, profile, tasks_by_period,
+                                     name_to_task, ci, eps,
+                                     length_multiplier=length_mult)
             if c is not None:
                 # Stamp the name-to-task map so _calibrate_repeats can
                 # re-check budget feasibility after editing the chain.
@@ -559,7 +881,7 @@ def generate_one(rng: random.Random, profile: dict, scale: int,
                 chains.append(c)
 
         # Same-task-reuse: Bernoulli marginal + uniform-random positions.
-        _calibrate_repeats(rng, chains, profile)
+        _calibrate_repeats(crng, chains, profile)
 
         # Strip internal sampling fields before serialising.
         for c in chains:
@@ -568,19 +890,33 @@ def generate_one(rng: random.Random, profile: dict, scale: int,
         for t in tasks:
             t.pop('_visit_weight', None)
 
-        return {
+        inst = {
             'metadata': {
+                'benchmark_version': BENCHMARK_VERSION,
                 'time_unit': 'us',
                 'description': (
                     f'Synthetic cause-effect task-set instance #{idx} '
                     f'at scale {scale} (pure-sampling, '
                     f'fingerprint-noise={eps}).'
                 ),
+                'reference_schedule': REFERENCE_SCHEDULE,
             },
             'platform': {'cpus': cpus},
             'tasks': tasks,
             'chains': chains,
         }
+        # Deterministic post-pass (no random draws from the instance's
+        # streams).  If it fails, the draw is discarded and sampling
+        # continues on the same streams (never the case for the released
+        # seeds).
+        fix = make_schedulable(profile, inst, f'{seed}:{scale}:{idx}')
+        if fix is None:
+            continue
+        inst['metadata']['wcet_scaling_alpha'] = fix['alpha']
+        inst['metadata']['jitter_lowered_tasks'] = fix['jitter_lowered']
+        inst['metadata']['deadlines_redrawn_tasks'] = fix['deadlines_redrawn']
+        inst['metadata']['offsets_wrapped_tasks'] = fix['offsets_wrapped']
+        return inst
     return None
 
 
@@ -597,7 +933,7 @@ def main():
     ap.add_argument('--seed', type=int, default=42)
     ap.add_argument('--out', required=True)
     ap.add_argument('--fingerprint-noise', type=float, default=0.10,
-                    help='ε: ±ε multiplicative jitter on WCET and ρ.')
+                    help='ε: ±ε multiplicative perturbation of WCET and ρ.')
     ap.add_argument('--utilization-cap', type=float, default=0.95,
                     help='Per-instance total-utilization cap as a '
                          'fraction of total_cores (default 0.95, i.e. '
@@ -627,19 +963,25 @@ def main():
     # Sanity: chains.global must carry the fallback bigram + ρ deciles
     # so sparse buckets can inherit them.
     cg = profile.get('chains', {}).get('global', {})
-    if 'bigram' not in cg or 'rho_decile_edges' not in cg:
+    if (profile.get('chains', {}).get('model') != 'waters2015'
+            and profile.get('chain_count_per_100_tasks', 0) > 0
+            and ('bigram' not in cg or 'rho_decile_edges' not in cg)):
         print('# WARNING: chains.global missing bigram or rho_decile_edges; '
               'sparse buckets will fail to sample.', file=sys.stderr)
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    rng = random.Random(args.seed)
     written = 0
+    alphas: list[float] = []
+    lowered = 0
+    redrawn = 0
+    wrapped = 0
     for i in range(args.count):
-        inst = generate_one(rng, profile, args.scale,
+        inst = generate_one(profile, args.scale,
                             args.fingerprint_noise, i,
                             utilization_cap=args.utilization_cap,
-                            length_scaling=args.length_scaling)
+                            length_scaling=args.length_scaling,
+                            seed=args.seed)
         if inst is None:
             print(f'# instance #{i}: gave up after retries (infeasible)',
                   file=sys.stderr)
@@ -647,6 +989,16 @@ def main():
         (out / f'instance-{args.scale}x-{i:04d}.json').write_text(
             json.dumps(inst, indent=2))
         written += 1
+        alphas.append(inst['metadata']['wcet_scaling_alpha'])
+        lowered += inst['metadata']['jitter_lowered_tasks']
+        redrawn += inst['metadata']['deadlines_redrawn_tasks']
+        wrapped += inst['metadata']['offsets_wrapped_tasks']
+    if alphas:
+        alphas.sort()
+        print(f'# WCET scaling alpha: min {alphas[0]:.3f}  '
+              f'median {alphas[len(alphas) // 2]:.3f}  max {alphas[-1]:.3f};  '
+              f'{redrawn} deadlines redrawn, {lowered} task jitters lowered, '
+              f'{wrapped} offsets wrapped')
     print(f'# wrote {written}/{args.count} instances to {out}')
 
 

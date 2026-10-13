@@ -9,7 +9,9 @@
 #   ./generate_all.sh -u <USECASE>               # different use-case (must have a fingerprint)
 #   ./generate_all.sh -n <COUNT>                 # instances per bucket
 #   ./generate_all.sh -o <OUT_DIR>               # output root (per-bucket subdirs created inside)
+#   ./generate_all.sh -s <SEED_BASE>             # seed base; bucket k uses SEED_BASE + k (default 42)
 set -euo pipefail
+INVOKE_DIR="$(pwd)"
 cd "$(dirname "$0")"
 
 USECASE="TrustMotion"
@@ -22,10 +24,10 @@ while getopts "u:n:o:s:h" opt; do
   case $opt in
     u) USECASE="$OPTARG" ;;
     n) COUNT="$OPTARG" ;;
-    o) OUT_ROOT="$OPTARG" ;;
+    o) case "$OPTARG" in /*) OUT_ROOT="$OPTARG" ;; *) OUT_ROOT="${INVOKE_DIR}/$OPTARG" ;; esac ;;
     s) SEED_BASE="$OPTARG" ;;
-    h) sed -n '1,12p' "$0"; exit 0 ;;
-    *) sed -n '1,12p' "$0"; exit 1 ;;
+    h) sed -n '2,12p' "$0"; exit 0 ;;
+    *) sed -n '2,12p' "$0"; exit 1 ;;
   esac
 done
 

@@ -1,9 +1,9 @@
 {
   "format_version": "1.0",
   "metadata": {
-    "name": "waters-bosch-hand-curated",
-    "description": "Hand-curated fingerprint approximating the WATERS-2015 Bosch task model and the WATERS-2017 IC chain corpus. Aggregate statistical distributions only -- no source runnable, chain, signal, or system identifier is preserved.",
-    "source_type": "hand-curated"
+    "name": "WATERS-Bosch",
+    "description": "Fingerprint built from the published characteristics of the Bosch engine-control application of Kramer et al., \"Real World Automotive Benchmarks for Free\" (WATERS 2015): period shares (Table III), runnable ACETs (Table IV), BCET/WCET factors (Table V), deadlines (Sec. II.D) and cause-effect chains (Sec. IV.E, Tables VI-VII).  Each task models one runnable.",
+    "source_type": "published"
   },
   "platform": [
     {
@@ -34,80 +34,39 @@
     "none": 100.0,
     "values": []
   },
-  "chain_count_per_100_tasks": 2,
+  "chain_count_per_100_tasks": 4,
   "same_task_repeat_share": 0.0,
   "per_period": {
     "1000": {
-      "task_share": 6.24,
+      "task_share": 3.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            1,
-            37
-          ],
-          "bcet_range": [
-            0,
-            30
-          ],
           "acet_range": [
-            1,
-            32
+            0.34,
+            30.11
           ],
-          "distribution": {
+          "acet_mean": 5.0,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 31.45
-          }
+            "shape": 1.044,
+            "scale": 4.822609
+          },
+          "bcet_factor_range": [
+            0.19,
+            0.92
+          ],
+          "wcet_factor_range": [
+            1.3,
+            29.11
+          ]
         }
       },
       "wcet_envelope": [
         1,
-        37
+        877
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -116,11 +75,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -129,76 +83,35 @@
       ]
     },
     "2000": {
-      "task_share": 2.64,
+      "task_share": 2.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            1,
-            12
-          ],
-          "bcet_range": [
-            0,
-            9
-          ],
           "acet_range": [
-            1,
-            9
+            0.32,
+            40.69
           ],
-          "distribution": {
+          "acet_mean": 4.2,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 10.2
-          }
+            "shape": 1.0607440083,
+            "scale": 4.026529
+          },
+          "bcet_factor_range": [
+            0.12,
+            0.89
+          ],
+          "wcet_factor_range": [
+            1.54,
+            19.04
+          ]
         }
       },
       "wcet_envelope": [
         1,
-        12
+        775
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -207,11 +120,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -220,76 +128,35 @@
       ]
     },
     "5000": {
-      "task_share": 1.68,
+      "task_share": 2.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            7,
-            99
-          ],
-          "bcet_range": [
-            0,
-            40
-          ],
           "acet_range": [
-            1,
-            89
+            0.36,
+            83.38
           ],
-          "distribution": {
+          "acet_mean": 11.04,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.5,
-            "beta": 84.15
-          }
+            "shape": 1.00818633,
+            "scale": 10.76029
+          },
+          "bcet_factor_range": [
+            0.17,
+            0.94
+          ],
+          "wcet_factor_range": [
+            1.13,
+            18.44
+          ]
         }
       },
       "wcet_envelope": [
-        7,
-        99
+        1,
+        1538
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -298,11 +165,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -311,76 +173,35 @@
       ]
     },
     "10000": {
-      "task_share": 50.48,
+      "task_share": 25.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            1,
-            100
-          ],
-          "bcet_range": [
-            0,
-            100
-          ],
           "acet_range": [
-            1,
-            100
+            0.21,
+            309.87
           ],
-          "distribution": {
+          "acet_mean": 10.09,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 85.0
-          }
+            "shape": 1.0098,
+            "scale": 9.929064
+          },
+          "bcet_factor_range": [
+            0.05,
+            0.99
+          ],
+          "wcet_factor_range": [
+            1.06,
+            30.03
+          ]
         }
       },
       "wcet_envelope": [
         1,
-        100
+        9305
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -389,11 +210,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -402,76 +218,35 @@
       ]
     },
     "20000": {
-      "task_share": 20.56,
+      "task_share": 25.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            1,
-            170
-          ],
-          "bcet_range": [
-            0,
-            130
-          ],
           "acet_range": [
-            1,
-            150
+            0.25,
+            291.42
           ],
-          "distribution": {
+          "acet_mean": 8.74,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 144.5
-          }
+            "shape": 1.0130969967,
+            "scale": 8.548929
+          },
+          "bcet_factor_range": [
+            0.11,
+            0.98
+          ],
+          "wcet_factor_range": [
+            1.06,
+            15.61
+          ]
         }
       },
       "wcet_envelope": [
         1,
-        170
+        4549
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -480,11 +255,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -493,76 +263,35 @@
       ]
     },
     "50000": {
-      "task_share": 10.4,
+      "task_share": 3.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            7,
-            1000
-          ],
-          "bcet_range": [
-            0,
-            260
-          ],
           "acet_range": [
-            1,
-            660
+            0.29,
+            92.98
           ],
-          "distribution": {
+          "acet_mean": 17.56,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 3.0,
-            "beta": 850.0
-          }
+            "shape": 1.0032421916,
+            "scale": 17.792834
+          },
+          "bcet_factor_range": [
+            0.32,
+            0.95
+          ],
+          "wcet_factor_range": [
+            1.13,
+            7.76
+          ]
         }
       },
       "wcet_envelope": [
-        7,
-        1000
+        1,
+        722
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -571,11 +300,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -584,76 +308,35 @@
       ]
     },
     "100000": {
-      "task_share": 3.92,
+      "task_share": 20.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            7,
-            3500
-          ],
-          "bcet_range": [
-            0,
-            1500
-          ],
           "acet_range": [
-            1,
-            3500
+            0.21,
+            420.43
           ],
-          "distribution": {
+          "acet_mean": 10.53,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 3.0,
-            "beta": 2975.0
-          }
+            "shape": 1.0090073603,
+            "scale": 10.366881
+          },
+          "bcet_factor_range": [
+            0.09,
+            0.99
+          ],
+          "wcet_factor_range": [
+            1.02,
+            8.88
+          ]
         }
       },
       "wcet_envelope": [
-        7,
-        3500
+        1,
+        3733
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -662,11 +345,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -675,76 +353,35 @@
       ]
     },
     "200000": {
-      "task_share": 1.68,
+      "task_share": 1.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            1,
-            130
-          ],
-          "bcet_range": [
-            0,
-            120
-          ],
           "acet_range": [
-            1,
-            250
+            0.22,
+            21.95
           ],
-          "distribution": {
+          "acet_mean": 2.56,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 110.5
-          }
+            "shape": 1.1571061236,
+            "scale": 2.548081
+          },
+          "bcet_factor_range": [
+            0.45,
+            0.98
+          ],
+          "wcet_factor_range": [
+            1.03,
+            4.9
+          ]
         }
       },
       "wcet_envelope": [
         1,
-        130
+        108
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -753,11 +390,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -766,76 +398,33 @@
       ]
     },
     "1000000": {
-      "task_share": 0.24,
+      "task_share": 4.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            1,
-            40
-          ],
-          "bcet_range": [
-            0,
-            12
-          ],
           "acet_range": [
-            1,
-            32
+            0.37,
+            0.46
           ],
-          "distribution": {
-            "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 34.0
-          }
+          "acet_mean": 0.43,
+          "acet_distribution": {
+            "kind": "uniform"
+          },
+          "bcet_factor_range": [
+            0.68,
+            0.8
+          ],
+          "wcet_factor_range": [
+            1.84,
+            4.75
+          ]
         }
       },
       "wcet_envelope": [
         1,
-        40
+        2
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
-        {
-          "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
         {
           "bin": [
             1.0,
@@ -844,11 +433,6 @@
           "count": 100.0
         }
       ],
-      "activation": {
-        "periodic": 100.0,
-        "angle_sync": 0.0,
-        "sporadic": 0.0
-      },
       "task_visit_weights": [
         {
           "weight": 0,
@@ -864,80 +448,39 @@
         3000,
         30000
       ],
-      "task_share": 2.16,
+      "task_share": 15.0,
       "wcet": {
         "aggregate": {
-          "wcet_range": [
-            3,
-            20
-          ],
-          "bcet_range": [
-            1,
-            5
-          ],
           "acet_range": [
-            2,
-            12
+            0.45,
+            88.58
           ],
-          "distribution": {
+          "acet_mean": 6.52,
+          "acet_distribution": {
             "kind": "weibull",
-            "alpha": 2.0,
-            "beta": 17.0
-          }
+            "shape": 1.0,
+            "scale": 6.070044
+          },
+          "bcet_factor_range": [
+            0.13,
+            0.92
+          ],
+          "wcet_factor_range": [
+            1.2,
+            28.17
+          ]
         }
       },
       "wcet_envelope": [
-        3,
-        20
+        1,
+        2495
       ],
       "pinning_probability": 1.0,
       "deadline_ratio_hist": [
         {
           "bin": [
-            0.0,
-            0.2
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.2,
-            0.4
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.4,
-            0.6
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.6,
-            0.75
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.75,
-            0.9
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            0.9,
-            1.0
-          ],
-          "count": 0.0
-        },
-        {
-          "bin": [
-            1.0,
-            1.0001
+            0.5,
+            0.5
           ],
           "count": 100.0
         }
@@ -945,172 +488,47 @@
     }
   ],
   "chains": {
+    "model": "waters2015",
+    "waters2015": {
+      "patterns_per_chain": [
+        {
+          "value": 1,
+          "share": 70.0
+        },
+        {
+          "value": 2,
+          "share": 20.0
+        },
+        {
+          "value": 3,
+          "share": 10.0
+        }
+      ],
+      "runnables_per_pattern": [
+        {
+          "value": 2,
+          "share": 30.0
+        },
+        {
+          "value": 3,
+          "share": 40.0
+        },
+        {
+          "value": 4,
+          "share": 20.0
+        },
+        {
+          "value": 5,
+          "share": 10.0
+        }
+      ],
+      "budget": "sum_of_pattern_periods"
+    },
     "global": {
       "asil": {
         "none": 100.0
       },
-      "priority": [],
-      "rho_grid_us": 1000,
-      "bigram": {
-        "Start": {
-          "1000": 2.97,
-          "2000": 1.98,
-          "5000": 3.96,
-          "10000": 4.95,
-          "20000": 1.98,
-          "50000": 0.99,
-          "100000": 1.98,
-          "200000": 0.99
-        },
-        "1000": {
-          "1000": 3.96,
-          "2000": 2.97,
-          "End": 0.99,
-          "5000": 0.99
-        },
-        "2000": {
-          "2000": 1.98,
-          "End": 1.98,
-          "1000": 1.98,
-          "10000": 0.99
-        },
-        "5000": {
-          "10000": 3.96,
-          "20000": 0.99
-        },
-        "10000": {
-          "10000": 2.97,
-          "20000": 8.91,
-          "End": 1.98,
-          "50000": 0.99
-        },
-        "20000": {
-          "End": 1.98,
-          "20000": 1.98,
-          "10000": 1.98,
-          "50000": 7.92
-        },
-        "50000": {
-          "End": 2.97,
-          "100000": 6.93,
-          "50000": 2.97
-        },
-        "100000": {
-          "End": 4.95,
-          "200000": 3.96
-        },
-        "200000": {
-          "End": 1.98,
-          "200000": 0.99,
-          "1000000": 2.97
-        },
-        "1000000": {
-          "End": 2.97
-        }
-      },
-      "rho_decile_edges": [
-        0.8,
-        0.9614,
-        1.0,
-        1.0725,
-        1.1014,
-        1.1769,
-        1.2385,
-        1.3424,
-        1.3968,
-        1.4286,
-        1.5152
-      ]
-    },
-    "length_buckets": {
-      "very_short": {
-        "share": 15.0,
-        "length_quartile_bands": [
-          2,
-          2,
-          3,
-          3,
-          3
-        ]
-      },
-      "short": {
-        "share": 85.0,
-        "length_quartile_bands": [
-          4,
-          4,
-          4,
-          5,
-          5
-        ],
-        "bigram": {
-          "Start": {
-            "1000": 3.33,
-            "2000": 2.22,
-            "5000": 4.44,
-            "10000": 5.56,
-            "20000": 2.22,
-            "100000": 1.11
-          },
-          "1000": {
-            "1000": 4.44,
-            "2000": 3.33,
-            "End": 1.11,
-            "5000": 1.11
-          },
-          "2000": {
-            "2000": 2.22,
-            "End": 2.22,
-            "1000": 2.22,
-            "10000": 1.11
-          },
-          "5000": {
-            "10000": 4.44,
-            "20000": 1.11
-          },
-          "10000": {
-            "10000": 3.33,
-            "20000": 10.0,
-            "End": 2.22,
-            "50000": 1.11
-          },
-          "20000": {
-            "End": 2.22,
-            "20000": 2.22,
-            "10000": 2.22,
-            "50000": 8.89
-          },
-          "50000": {
-            "End": 3.33,
-            "100000": 6.67,
-            "50000": 3.33
-          },
-          "100000": {
-            "End": 5.56,
-            "200000": 2.22
-          },
-          "200000": {
-            "End": 1.11,
-            "200000": 1.11,
-            "1000000": 1.11
-          },
-          "1000000": {
-            "End": 1.11
-          }
-        },
-        "rho_decile_edges": [
-          0.8,
-          0.9187,
-          1.0,
-          1.0421,
-          1.0834,
-          1.1111,
-          1.2185,
-          1.3394,
-          1.3838,
-          1.4286,
-          1.5152
-        ]
-      }
+      "priority": []
     }
   }
 }

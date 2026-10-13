@@ -4,7 +4,7 @@ A fingerprint is an anonymised statistical summary of a real-time
 workload, sufficient to drive a generator that emits synthetic
 instances statistically close to the source.
 
-Three axes:
+Four axes:
 
 - **Global** — workload-level scalars and toplevel metadata.
 - **Period axis** — per-period attributes (one entry per static period).
@@ -66,7 +66,8 @@ disclosing the source population size.
  {"weight": 5, "share": 10.0},
  {"weight": 20, "share": 10.0}
  ]
- // optional WATERS extensions (omit if all-zero):
+ // optional WATERS extensions (omit if all-zero; informational,
+ // not consumed by the generator):
  // "bcet_envelope": [..., ...]
  // "acet_envelope": [..., ...]
  // "wcet_min_envelope": [..., ...]
@@ -133,9 +134,11 @@ consumer detects which by inspecting the key (`histogram` or
 
 - Bin width is adaptive: `max(200 us, range/8)` per period.
 - After binning, a post-pass merges any bin with `count < 1 / N_total *
- 100` into its neighbour, so every bin holds ≥ 2 source tasks.
+ 100` into its neighbour, so every bin holds ≥ 1 source task.
 - WATERS optional extensions can attach to each bin as
- `wcet_min_bin`, `bcet_bin`, `acet_bin`, or `exec_distribution`.
+ `wcet_min_bin`, `bcet_bin`, `acet_bin`, or `exec_distribution`
+ (informational; the generator reads execution-time extensions only
+ from the aggregate form).
 
 **Aggregate form**:
 
@@ -152,8 +155,30 @@ consumer detects which by inspecting the key (`histogram` or
 
 - Used by sources that ship a fitted per-instance execution-time
  distribution (Kramer-2015 / WATERS style).
-- `bcet_range`, `acet_range`, `distribution` are optional WATERS
- extensions.
+- `bcet_range`, `acet_range`, `wcet_min_range`, `distribution` are
+ optional WATERS extensions.
+
+**Aggregate form, factor variant** (the execution-time model of Kramer
+et al., WATERS 2015; used by `WATERS-Bosch`):
+
+```jsonc
+"wcet": {
+ "aggregate": {
+ "acet_range": [0.21, 309.87], // us, Table IV min / max
+ "acet_mean": 10.09, // us, Table IV avg (informational)
+ "acet_distribution": {"kind": "weibull", "shape": 1.0098, "scale": 10.15},
+ "bcet_factor_range": [0.05, 0.99], // Table V: BCET = f * ACET
+ "wcet_factor_range": [1.06, 30.03] // Table V: WCET = f * ACET
+ }
+}
+```
+
+- The generator draws the ACET from `acet_distribution` (`weibull` with
+ `shape` / `scale`, or `uniform`) truncated to `acet_range`, and BCET
+ and WCET as the ACET times factors drawn uniformly from the two factor
+ ranges; the ±ε perturbation applies to the WCET.  Times are rounded to
+ integer microseconds with a floor of 1 us, keeping
+ 1 ≤ bcet ≤ acet ≤ wcet.
 
 ### Per-length-bucket fields (chain axis, four buckets)
 
@@ -207,13 +232,13 @@ are still populated.
 
 | Field | Type | Required | Semantics |
 |---|---|---|---|
-| `task_share` | float | yes | per-100 fraction of static-period tasks at this period |
+| `task_share` | float | yes | % of all tasks at this period (per-period plus variable-period shares sum to 100) |
 | `wcet` | object | yes | exactly one of `{histogram, aggregate}` as the inner key; consumer detects which form to dispatch |
 | `wcet_envelope` | `[min, max]` | yes | hard clamp at sample time |
 | `pinning_probability` | float (0.05 grain) | yes | per-period scalar |
 | `deadline_ratio_hist` | list of 7 bins | yes | per-100-task at this period |
-| `ea` | object | optional | omit when `ea_default = "none"` and bucket is all-none |
-| `activation` | object | optional | defaults to `{periodic: 100, angle_sync: 0, sporadic: 0}` |
+| `ea` | object | optional | omit when `ea_default = "none"` and the period is all-none |
+| `activation` | object | optional | defaults to `{periodic: 100, angle_sync: 0, sporadic: 0}`; informational, not consumed by the generator |
 | `task_visit_weights` | list of `{weight, share}` | yes | per-task chain-visit weight distribution; share sums to 100 within the period |
 
 ### Variable-period (optional axis)
@@ -245,14 +270,33 @@ One entry per non-static task class (typically angle-sync):
 |---|---|---|---|
 | `share` | float | yes | per-100-chain fraction in this bucket |
 | `length_quartile_bands` | `[p0, p25, p50, p75, p100]` of L | yes | within-bucket length distribution |
-| `boundaries` | `{starts_with_pdu_in, ends_with_pdu_out}` | optional | omit on non-bus sources |
+| `boundaries` | `{starts_with_pdu_in, ends_with_pdu_out}` | optional | informational; omit on non-bus sources. Not consumed by the generator (released chains are task-only) |
 | `bigram` | dict of from-period → dict of to-period → count | optional | per-100-transition shares within bucket; **omit when bucket has < 5 source chains** — consumer then reads `chains.global.bigram` |
 | `same_task_repeat_positions` | list of `{first, second, share}` | optional | informational: conditional on chain having a repeat, the (first, second) index distribution observed in the *source* workload (positions 0-indexed). Not consumed by the generator — kept only as a record of the source's positional structure. |
 | `rho_decile_edges` | list of 11 floats | optional | `{p0, p10, ..., p100}` of ρ within bucket; **omit when bucket has < 5 source chains** — consumer then reads `chains.global.rho_decile_edges` |
 
+`chains.model = "waters2015"` (optional; used by `WATERS-Bosch`) replaces
+the length-bucket / bigram / ρ model by the chain model of Kramer et al.
+(WATERS 2015); `length_buckets`, `bigram` and `rho_decile_edges` are then
+not required:
+
+| Field | Type | Semantics |
+|---|---|---|
+| `chains.waters2015.patterns_per_chain` | list of `{value, share}` | number of involved activation patterns (distinct static periods) per chain (Table VI: 1/2/3 at 70/20/10 %) |
+| `chains.waters2015.runnables_per_pattern` | list of `{value, share}` | tasks per pattern (Table VII: 2/3/4/5 at 30/40/20/10 %), multiplied by k under `--length-scaling scale` |
+| `chains.waters2015.budget` | `"sum_of_pattern_periods"` | budget = sum of the involved patterns' periods |
+
+The generator draws the counts, then for each pattern a distinct period
+uniformly among those with enough tasks and that many distinct tasks
+of it; a pattern's tasks are consecutive, so there are no cyclic
+transitions between patterns.  If the chain's sum of WCETs exceeds the
+budget, periods and tasks are redrawn with the same counts.
+
 ### Bucket boundaries
 
-Fixed thresholds applied at fit time:
+Fixed thresholds applied at fit time.  A chain's length L counts its
+scheduled tasks only; bus-PDU markers are counted neither in L nor in
+the bigrams (they are recorded only in the informational `boundaries`):
 
 ```
 very_short : L <= 3
@@ -274,16 +318,20 @@ Sketch of the per-instance generation algorithm:
 
 1. **Platform**: replicate `platform` k times for scale S_k.
  Total tasks = `100k`.
-2. **Static-period task pool**: sample `(1 − variable_period_share) ·
- 100k` tasks; for each, draw period from `periods_us` weighted by
- `task_share`, then draw WCET / D/T / EA / pinning / activation from
- the corresponding period entry. Sample task-visit-weight from
- `task_visit_weights` and store it on the task.
-3. **Variable-period task pool**: for each `variable_period` entry,
- sample `task_share · 100k / 100` tasks at that activation class,
- with period drawn uniformly from `period_range_us`.
-4. **Chains**: instance has `chain_count_per_100_tasks · 100k / 100`
- chains. For each chain:
+2. **Task pool**: sample `100k` tasks.  Each task is a
+ variable-period task with probability `Σ variable_period[].task_share
+ / 100` (so the number of such tasks is random), otherwise a
+ static-period task.
+3. **Static-period task**: draw the period from `periods_us` weighted
+ by `task_share`, then draw WCET / D/T / EA / pinning from the
+ corresponding period entry (the per-period `activation` field is
+ not consumed; static-period tasks are periodic). Sample the
+ task-visit-weight from `task_visit_weights` and store it on the
+ task.  **Variable-period task**: pick a `variable_period` entry
+ weighted by `task_share`; the task takes that entry's activation
+ class, with period drawn uniformly from `period_range_us`.
+4. **Chains**: instance has up to `chain_count_per_100_tasks · 100k / 100`
+ chains (a draw that yields fewer than two tasks is dropped). For each chain:
  - Pick length bucket weighted by `share`; draw `L_src` from the
  bucket's `length_quartile_bands` (uniform within a quartile band).
  Final `L = k · L_src` under the default `--length-scaling scale`,
@@ -291,14 +339,12 @@ Sketch of the per-instance generation algorithm:
  scale `S_k` (matching the platform-replication factor); pass
  `--length-scaling source` to opt out and keep `L = L_src`.
  - Pick chain-position periods by walking the bucket's `bigram`
- (or the global bigram, when `fallback = "global"`) from `Start`
+ (or the global bigram, when the bucket has none) from `Start`
  for L steps. The walk can terminate earlier when the row offers
  only an `End` continuation (preserves natural termination).
  - For each chain position, draw a task from the period-matching pool
  weighted by the task's `task_visit_weight`. Identities are
  unique within the chain (no repeats during the walk).
- - Optionally honour `boundaries`: if `starts_with_pdu_in` fires,
- mark position 0 as a boundary task; same for the end.
  - **Same-task reuse** (separate post-pass): with probability
  `same_task_repeat_share` per chain, pick two distinct positions
  uniformly at random in `[0, L-1]` and copy the task at the first
@@ -310,7 +356,11 @@ Sketch of the per-instance generation algorithm:
  rate but not the source's positional structure.
  - Draw ρ from the bucket's `rho_decile_edges` (uniform within a
  decile) and compute the budget
- `b = round_grid(ρ · Σ_{j≥2} T_j)`.
+ `b = max(g, round_g(ρ · (1 + δ) · Σ_j T_j))` over all chain
+ positions, with `g = rho_grid_us` and δ ~ Uniform(−ε, +ε).  ρ is
+ redrawn (up to 8 times) while `b < Σ_j C_j`; failing that, `b` is
+ the smallest grid point `≥ Σ_j C_j`.  After same-task reuse, the
+ budget is raised to that floor again if needed.
  - Assign ASIL (from `asil`) and priority (from `priority`) if
  populated.
 
@@ -323,8 +373,13 @@ format_version == "1.0"
 metadata.{name, description, source_type} all present
 platform is a non-empty list of {cores: int}
 periods_us is sorted and contains only positive ints
-chains.global.bigram is non-empty (when chain_count_per_100_tasks > 0)
-chains.global.rho_decile_edges has 11 sorted floats (when chain_count_per_100_tasks > 0)
+jitter is present; every period in periods_us has a per_period entry
+chains.global.bigram is non-empty (when chain_count_per_100_tasks > 0 and chains.model != "waters2015")
+chains.global.rho_decile_edges has 11 sorted floats (same condition)
+chains.model == "waters2015": waters2015.patterns_per_chain and
+ runnables_per_pattern are lists of {value: positive int, share} with
+ shares summing to 100, budget == "sum_of_pattern_periods", and
+ same_task_repeat_share == 0
 sum(per_period[p].task_share) + sum(variable_period[i].task_share) == 100 ± 1.5
 sum(length_buckets[b].share) == 100 ± 1.5 (when ≥ 1 bucket present)
 sum(per_period[p].activation.*) == 100 ± 1.5 for each period that has activation
@@ -333,5 +388,12 @@ sum(per_period[p].deadline_ratio_hist[].count) == 100 ± 1.5 for each period
 length_quartile_bands within bucket's L range and sorted
 each per-bucket rho_decile_edges (when present) has 11 sorted floats
 all period keys in any bigram are strings of ints in periods_us
- (plus the literal "Start" / "End" absorbing states)
+ (plus the literal "Start" / "End" states)
+per_period and variable_period: wcet has exactly one of {histogram,
+ aggregate}; wcet_envelope is [lo, hi] with lo <= hi; an aggregate has
+ wcet_range, or the factor variant (acet_range > 0,
+ bcet_factor_range <= 1, wcet_factor_range >= 1, acet_distribution
+ weibull with positive shape and scale, or uniform)
+variable_period: period_range_us is [lo, hi] with 0 < lo <= hi, and
+ deadline_ratio_hist sums to 100
 ```

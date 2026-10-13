@@ -26,6 +26,41 @@ def _sorted(seq):
     return list(seq) == sorted(seq)
 
 
+def _check_aggregate(agg, where: str, push) -> None:
+    """Aggregate-form checks.  Two variants: an envelope variant with
+    ``wcet_range`` (plus optional bcet/acet/wcet_min ranges and a
+    ``distribution``), and the factor variant of Kramer et al. (WATERS
+    2015) with ``acet_range``, ``acet_distribution``,
+    ``bcet_factor_range`` (factors <= 1) and ``wcet_factor_range``
+    (factors >= 1)."""
+    if agg is None:
+        return
+    def rng_ok(r):
+        return isinstance(r, list) and len(r) == 2 and r[0] <= r[1]
+    if 'wcet_factor_range' in agg:
+        for key in ('acet_range', 'bcet_factor_range', 'wcet_factor_range'):
+            if not rng_ok(agg.get(key)):
+                push(f'{where}.wcet.aggregate.{key} must be [lo, hi], lo <= hi')
+        if rng_ok(agg.get('acet_range')) and not agg['acet_range'][0] > 0:
+            push(f'{where}.wcet.aggregate.acet_range must be positive')
+        if rng_ok(agg.get('bcet_factor_range')) and agg['bcet_factor_range'][1] > 1.0:
+            push(f'{where}.wcet.aggregate.bcet_factor_range must be <= 1')
+        if rng_ok(agg.get('wcet_factor_range')) and agg['wcet_factor_range'][0] < 1.0:
+            push(f'{where}.wcet.aggregate.wcet_factor_range must be >= 1')
+        dist = agg.get('acet_distribution') or {'kind': 'uniform'}
+        if dist.get('kind') == 'weibull':
+            if not all(isinstance(dist.get(k), (int, float)) and dist[k] > 0
+                       for k in ('shape', 'scale')):
+                push(f'{where}.wcet.aggregate.acet_distribution needs '
+                     f'positive shape and scale')
+        elif dist.get('kind') != 'uniform':
+            push(f'{where}.wcet.aggregate.acet_distribution.kind must be '
+                 f'"weibull" or "uniform"')
+    elif not rng_ok(agg.get('wcet_range')):
+        push(f'{where}.wcet.aggregate needs wcet_range [lo, hi] or the '
+             f'factor variant (wcet_factor_range)')
+
+
 def validate(profile: dict, label: str = '<profile>') -> list[str]:
     """Return a list of failure messages.  Empty list = all invariants pass."""
     fails: list[str] = []
@@ -61,6 +96,26 @@ def validate(profile: dict, label: str = '<profile>') -> list[str]:
     # When the source has no chain corpus (chain_count_per_100_tasks == 0),
     # the chain section is optional and may carry empty placeholders.
     has_chains = profile.get('chain_count_per_100_tasks', 0) > 0
+    # chains.model == "waters2015": chains follow the activation-pattern
+    # model of Kramer et al. (WATERS 2015) instead of the length-bucket /
+    # bigram / rho model, which is then not required.
+    waters = profile.get('chains', {}).get('model') == 'waters2015'
+    if waters:
+        wm = profile['chains'].get('waters2015') or {}
+        for key in ('patterns_per_chain', 'runnables_per_pattern'):
+            dist = wm.get(key)
+            if not (isinstance(dist, list) and dist and all(
+                    isinstance(d, dict) and isinstance(d.get('value'), int)
+                    and d['value'] > 0 for d in dist)):
+                push(f'chains.waters2015.{key} must be a non-empty list of '
+                     f'{{value: positive int, share}}')
+            elif not _close(sum(d.get('share', 0) for d in dist), 100):
+                push(f'chains.waters2015.{key} shares do not sum to 100')
+        if wm.get('budget') != 'sum_of_pattern_periods':
+            push('chains.waters2015.budget must be "sum_of_pattern_periods"')
+        if profile.get('same_task_repeat_share', 0) not in (0, 0.0):
+            push('same_task_repeat_share must be 0 with chains.model "waters2015"')
+        has_chains = False      # the bucket/bigram/rho fields are not used
     cg = profile.get('chains', {}).get('global', {}) or {}
     big = cg.get('bigram')
     if has_chains and (not isinstance(big, dict) or len(big) == 0):
@@ -73,6 +128,12 @@ def validate(profile: dict, label: str = '<profile>') -> list[str]:
                  f'{len(rde) if isinstance(rde, list) else "?"})')
         elif not _sorted(rde):
             push('chains.global.rho_decile_edges not sorted')
+
+    if not isinstance(profile.get('jitter'), dict):
+        push('jitter missing (use {"none": 100.0, "values": []} for none)')
+    for p_ in (pus or []):
+        if str(p_) not in (profile.get('per_period') or {}):
+            push(f'periods_us entry {p_} has no per_period entry')
 
     # ---- Task-share sum (per_period + variable_period == 100) ----
     pp = profile.get('per_period', {}) or {}
@@ -113,6 +174,23 @@ def validate(profile: dict, label: str = '<profile>') -> list[str]:
         if keys not in ({'histogram'}, {'aggregate'}):
             push(f'per_period[{k}].wcet must have exactly one of '
                  f'{{histogram, aggregate}}; got {keys}')
+        _check_aggregate(wc.get('aggregate'), f'per_period[{k}]', push)
+    for i, vp in enumerate(profile.get('variable_period', []) or []):
+        pr = vp.get('period_range_us')
+        if not (isinstance(pr, list) and len(pr) == 2 and 0 < pr[0] <= pr[1]):
+            push(f'variable_period[{i}].period_range_us must be [lo, hi], 0 < lo <= hi')
+        env = vp.get('wcet_envelope')
+        if not (isinstance(env, list) and len(env) == 2 and env[0] <= env[1]):
+            push(f'variable_period[{i}].wcet_envelope malformed: {env!r}')
+        wkeys = set((vp.get('wcet') or {}).keys())
+        if wkeys not in ({'histogram'}, {'aggregate'}):
+            push(f'variable_period[{i}].wcet must have exactly one of '
+                 f'{{histogram, aggregate}}; got {wkeys}')
+        _check_aggregate((vp.get('wcet') or {}).get('aggregate'),
+                         f'variable_period[{i}]', push)
+        dt = vp.get('deadline_ratio_hist', [])
+        if dt and not _close(sum(b.get('count', 0) for b in dt), 100):
+            push(f'variable_period[{i}].deadline_ratio_hist does not sum to 100')
 
     # ---- Length-bucket invariants ----
     lbs = profile.get('chains', {}).get('length_buckets', {}) or {}
@@ -184,7 +262,10 @@ def main():
             profile = json.loads(path.read_text())
         except Exception as exc:
             print(f'  {path}: PARSE ERROR — {exc}'); all_ok = False; continue
-        fails = validate(profile, str(path))
+        try:
+            fails = validate(profile, str(path))
+        except (KeyError, TypeError, AttributeError, ValueError) as e:
+            fails = [f'malformed profile ({type(e).__name__}: {e})']
         if fails:
             all_ok = False
             print(f'  {path}: FAIL ({len(fails)})')
